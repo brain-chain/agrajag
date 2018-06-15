@@ -19,9 +19,6 @@ public class ImageService extends Service {
     @Override
     public void onCreate()
     {
-        final IntentFilter theFilter = new IntentFilter();
-        theFilter.addAction("android.net.wifi.supplicant.CONNECTION_CHANGE");
-        theFilter.addAction("android.net.wifi.STATE_CHANGE");
         this.yourReceiver = new BroadcastReceiver()
         {
             @Override
@@ -36,7 +33,8 @@ public class ImageService extends Service {
                         //get the different network states
                         if (networkInfo.getState() == NetworkInfo.State.CONNECTED)
                         {
-                            startTransfer();            // Starting the Transfer                    }                }            }        }    };    // Registers the receiver so that your service will listen for    // broadcasts    this.registerReceiver(this.yourReceiver, theFilter);}
+                            startTransfer();
+                            // Starting the Transfer
                         }
                     }
                 }
@@ -44,11 +42,26 @@ public class ImageService extends Service {
         };
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.wifi.supplicant.CONNECTION_CHANGE");
+        filter.addAction("android.net.wifi.STATE_CHANGE");
+        this.registerReceiver(this.yourReceiver, filter);
+        return Service.START_NOT_STICKY;
+    }
     private void startTransfer()
     {
+        int r = 90;
         //TODO Image transfer with the progress bar and other zevel to be done
     }
 
+    @Override
+    public void onDestroy()
+    {
+        unregisterReceiver(yourReceiver);
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
