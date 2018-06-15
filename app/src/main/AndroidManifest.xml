@@ -16,7 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ImageService"></activity>
+
+        <service
+            android:name=".ImageService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

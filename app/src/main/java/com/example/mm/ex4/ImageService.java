@@ -1,13 +1,16 @@
 package com.example.mm.ex4;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
 
-public class ImageService extends AppCompatActivity {
+public class ImageService extends Service {
+    public ImageService() {
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_service);
+    public IBinder onBind(Intent intent) {
+        // TODO: Return the communication channel to the service.
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }
