@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.mm.ex4.ImageService">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="346dp"
+        android:layout_height="483dp"
+        android:text="יאבד יום אולד בו והלילה אמר הרה גבר: היום ההוא יהי חושך אל ידרשהו אלוה ממעל ואל תופע עליו נהרה:...לא שלותי ולא שקטתי ולא נחתי ויבוא רוגז:"
+        tools:layout_editor_absoluteX="19dp"
+        tools:layout_editor_absoluteY="10dp" />
+</android.support.constraint.ConstraintLayout>
