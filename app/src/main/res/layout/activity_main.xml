@@ -21,6 +21,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/WifiStatusText"
+        android:layout_width="194dp"
+        android:layout_height="wrap_content"
+        android:text="Wifi status: "
+        android:textSize="24sp"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="113dp" />
+
     <Button
         android:id="@+id/buttonStop"
         android:layout_width="194dp"

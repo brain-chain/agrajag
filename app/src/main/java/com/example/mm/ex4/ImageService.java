@@ -8,7 +8,11 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.Environment;
 import android.os.IBinder;
+import android.util.Log;
+
+import java.io.File;
 
 public class ImageService extends Service {
     private BroadcastReceiver yourReceiver;
@@ -53,7 +57,43 @@ public class ImageService extends Service {
     }
     private void startTransfer()
     {
+
         int r = 90;
+        // Getting the Camera Folder
+
+        Log.i("hi","hi");
+
+        File dcim =
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "//Camera");
+
+        if (dcim == null) {
+            return;
+        }
+
+
+
+
+        File[] pics = dcim.listFiles();
+        int cnt = 0;
+        for (File pic : pics) {
+            Log.v("name",pic.getName() );
+        }
+
+
+        /*
+        if (pics != null) {
+            for (File pic : pics) {
+                Log.i("forLoop", "inside for");
+            }
+        }
+        else
+            {
+                Log.i("check", "pics is null");
+            }
+
+*/
+
+
         //TODO Image transfer with the progress bar and other zevel to be done
     }
 
