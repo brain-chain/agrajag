@@ -20,12 +20,15 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.view.View;
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -159,13 +162,17 @@ public class ImageService extends Service {
 
                         //sends the message to the server
                         OutputStream output = socket.getOutputStream();
+                        InputStream input = socket.getInputStream();
 
                         FileInputStream fis = new FileInputStream(pics[3]);
 
+                        DataOutputStream dataOut = new DataOutputStream(output);
 
                         Bitmap bm = BitmapFactory.decodeStream(fis);
                         byte[] imgbyte = getBytesFromBitmap(bm);
-                    //  output.write(imgbyte.length);
+                        int imgbyteLength = imgbyte.length;
+                        dataOut.writeInt(imgbyteLength);
+                        //output.write(imgbyteLength);
                         output.write(imgbyte);
                         output.flush();
                         Log.v("sending","sent picture");
