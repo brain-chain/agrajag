@@ -110,7 +110,7 @@ public class ImageService extends Service {
         for (int i = 0; i< pics.length; i++)
         {
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -121,7 +121,7 @@ public class ImageService extends Service {
         }
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -135,6 +135,61 @@ public class ImageService extends Service {
 
         //TODO Image transfer with the progress bar and other zevel to be done
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                File dcim =
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "//Camera");
+
+                if (dcim == null) {
+                    return;
+                }
+
+                File[] pics = dcim.listFiles();
+
+                //here you must put your computer's IP address.
+                try {
+                    InetAddress serverAddr = InetAddress.getByName("10.0.2.2");
+
+                    Socket socket = null;
+                    try {
+                        //create a socket to make the connection with the server
+                        socket = new Socket(serverAddr, 8000);
+
+                        //sends the message to the server
+                        OutputStream output = socket.getOutputStream();
+
+                        FileInputStream fis = new FileInputStream(pics[3]);
+
+
+                        Bitmap bm = BitmapFactory.decodeStream(fis);
+                        byte[] imgbyte = getBytesFromBitmap(bm);
+                    //  output.write(imgbyte.length);
+                        output.write(imgbyte);
+                        output.flush();
+                        Log.v("sending","sent picture");
+
+                    } catch (FileNotFoundException e) {
+                        Log.e("TCP", "S: ERROR", e);
+                    } catch (IOException e) {
+                        Log.e("TCP", "S: ERROR", e);
+                    } finally {
+                        if (socket != null) {
+                            socket.close();
+                        }
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Log.e("TCP", "C: ERROR", e);
+                }
+
+            }
+        }).start();
+
+        /*
         //here you must put your computer's IP address.
         try {
             InetAddress serverAddr = InetAddress.getByName("10.0.2.2");
@@ -173,7 +228,7 @@ public class ImageService extends Service {
             Log.e("TCP", "C: ERROR", e);
         }
 
-
+    */
 
     }
     @Override
