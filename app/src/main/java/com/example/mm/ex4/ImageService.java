@@ -196,7 +196,12 @@ public class ImageService extends Service {
     public static void getPics(File dir, ArrayList<File> pics) {
         File[] files = dir.listFiles();
         for (File file : files) {
-            if (file.isDirectory()) {
+            if (file.isDirectory()
+
+                    //makes no sense to get thumbnails and then create new thumbnails from them,
+                    //as the ImageService do to all the photos that are sent to it
+                    && !file.getName().endsWith("thumbnails")
+                    && !file.getName().endsWith("Thumbnails")) {
                 getPics(file,pics);
             }
             else if(file.getName().endsWith(".jpg")
