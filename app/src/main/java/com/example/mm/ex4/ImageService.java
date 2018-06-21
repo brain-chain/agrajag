@@ -72,19 +72,6 @@ public class ImageService extends Service {
     }
 
     private void startTransfer() {
-        // Getting the Camera Folder
-
-        Log.i("hi", "hi");
-
-        File dcim =
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "//Camera");
-
-        if (dcim == null) {
-            return;
-        }
-
-        File[] pics = dcim.listFiles();
-
 
         NotificationChannel channel = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -99,49 +86,22 @@ public class ImageService extends Service {
             return;
         }
 
-        int notificationId = 1;
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "2");
+        //initializing the progress bar
+        final int notificationId = 1;
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "2");
         builder .setSmallIcon(R.drawable.ic_launcher_background)
-                .setContentTitle("Picture Transfer")
+                .setContentTitle("Image Transfer")
                 .setContentText("Transfer in progress")
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setProgress(100,0,false);
         notificationManager.notify(notificationId, builder.build());
 
-
-        for (int i = 0; i< pics.length; i++)
-        {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Log.v("name","Transfered:" + pics[i].getName() );
-
-            builder.setProgress(pics.length,i,false);
-            notificationManager.notify(notificationId, builder.build());
-        }
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        builder.setProgress(pics.length,pics.length,false);
-        builder.setContentText("transfer completed!");
-        notificationManager.notify(notificationId, builder.build());
-
-
-
-
-        //TODO Image transfer with the progress bar and other zevel to be done
-
         new Thread(new Runnable() {
             @Override
             public void run() {
 
+                // Getting the Camera Folder
                 File dcim =
                         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "//Camera");
 
@@ -149,9 +109,10 @@ public class ImageService extends Service {
                     return;
                 }
 
+                //getting the images
                 File[] pics = dcim.listFiles();
 
-                //here you must put your computer's IP address.
+                //connecting to the server
                 try {
                     InetAddress serverAddr = InetAddress.getByName("10.0.2.2");
 
@@ -164,7 +125,12 @@ public class ImageService extends Service {
                         DataOutputStream dataOut = new DataOutputStream(output);
                         InputStream input = socket.getInputStream();
 
+                        //sending the images
                         for(int i=0;i<pics.length;i++) {
+
+                            //updating the progress bar
+                            builder.setProgress(pics.length,i,false);
+                            notificationManager.notify(notificationId, builder.build());
 
                             String picName = pics[i].getName();
                             int nameLength = picName.length();
@@ -177,9 +143,19 @@ public class ImageService extends Service {
                             Log.v(getClass().getName(), String.format("value = %d", imgbyteLength));
                             dataOut.writeInt(imgbyteLength);
                             output.write(imgbyte);
-                            //output.flush();
-                            Log.v("sending", "sent picture");
+                            output.flush();
                         }
+
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        //display completed message
+                        builder.setProgress(pics.length,pics.length,false);
+                        builder.setContentText("transfer completed!");
+                        notificationManager.notify(notificationId, builder.build());
 
                     } catch (FileNotFoundException e) {
                         Log.e("TCP", "S: ERROR", e);
@@ -200,47 +176,6 @@ public class ImageService extends Service {
             }
         }).start();
 
-        /*
-        //here you must put your computer's IP address.
-        try {
-            InetAddress serverAddr = InetAddress.getByName("10.0.2.2");
-
-            Socket socket = null;
-            try {
-                //create a socket to make the connection with the server
-                socket = new Socket(serverAddr, 1234);
-
-                //sends the message to the server
-                OutputStream output = socket.getOutputStream();
-
-                FileInputStream fis = new FileInputStream(pics[3]);
-
-
-                Bitmap bm = BitmapFactory.decodeStream(fis);
-                byte[] imgbyte = getBytesFromBitmap(bm);
-
-
-                output.write(imgbyte);
-                output.flush();
-
-            } catch (FileNotFoundException e) {
-                Log.e("TCP", "S: ERROR", e);
-            } catch (IOException e) {
-                Log.e("TCP", "S: ERROR", e);
-            } finally {
-                if (socket != null) {
-                    socket.close();
-                }
-            }
-
-        }
-        catch (Exception e)
-        {
-            Log.e("TCP", "C: ERROR", e);
-        }
-
-    */
-
     }
     @Override
     public void onDestroy() {
@@ -258,8 +193,4 @@ public class ImageService extends Service {
         bitmap.compress(Bitmap.CompressFormat.PNG, 70, stream);
         return stream.toByteArray();
     }
-
-
-
-
 }
