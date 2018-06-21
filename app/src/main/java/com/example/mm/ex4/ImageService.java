@@ -159,23 +159,25 @@ public class ImageService extends Service {
                     try {
                         //create a socket to make the connection with the server
                         socket = new Socket(serverAddr, 8000);
-
                         //sends the message to the server
                         OutputStream output = socket.getOutputStream();
                         InputStream input = socket.getInputStream();
 
-                        FileInputStream fis = new FileInputStream(pics[3]);
+                        //for(int i=3;i<pics.length;i++) {
 
-                        DataOutputStream dataOut = new DataOutputStream(output);
+                            FileInputStream fis = new FileInputStream(pics[3]);
 
-                        Bitmap bm = BitmapFactory.decodeStream(fis);
-                        byte[] imgbyte = getBytesFromBitmap(bm);
-                        int imgbyteLength = imgbyte.length;
-                        dataOut.writeInt(imgbyteLength);
-                        //output.write(imgbyteLength);
-                        output.write(imgbyte);
-                        output.flush();
-                        Log.v("sending","sent picture");
+                            DataOutputStream dataOut = new DataOutputStream(output);
+
+                            Bitmap bm = BitmapFactory.decodeStream(fis);
+                            byte[] imgbyte = getBytesFromBitmap(bm);
+                            int imgbyteLength = imgbyte.length;
+                            Log.v(getClass().getName(), String.format("value = %d", imgbyteLength));
+                            dataOut.writeInt(imgbyteLength);
+                            output.write(imgbyte);
+                            //output.flush();
+                            Log.v("sending", "sent picture");
+//                        }
 
                     } catch (FileNotFoundException e) {
                         Log.e("TCP", "S: ERROR", e);
