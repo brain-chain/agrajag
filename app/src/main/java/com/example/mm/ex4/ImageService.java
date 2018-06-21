@@ -161,14 +161,16 @@ public class ImageService extends Service {
                         socket = new Socket(serverAddr, 8000);
                         //sends the message to the server
                         OutputStream output = socket.getOutputStream();
+                        DataOutputStream dataOut = new DataOutputStream(output);
                         InputStream input = socket.getInputStream();
 
-                        //for(int i=3;i<pics.length;i++) {
+                        for(int i=0;i<pics.length;i++) {
 
-                            FileInputStream fis = new FileInputStream(pics[3]);
-
-                            DataOutputStream dataOut = new DataOutputStream(output);
-
+                            String picName = pics[i].getName();
+                            int nameLength = picName.length();
+                            dataOut.writeInt(nameLength);
+                            dataOut.writeBytes(picName);
+                            FileInputStream fis = new FileInputStream(pics[i]);
                             Bitmap bm = BitmapFactory.decodeStream(fis);
                             byte[] imgbyte = getBytesFromBitmap(bm);
                             int imgbyteLength = imgbyte.length;
@@ -177,7 +179,7 @@ public class ImageService extends Service {
                             output.write(imgbyte);
                             //output.flush();
                             Log.v("sending", "sent picture");
-//                        }
+                        }
 
                     } catch (FileNotFoundException e) {
                         Log.e("TCP", "S: ERROR", e);
