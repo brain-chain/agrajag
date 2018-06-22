@@ -39,6 +39,7 @@ import static java.lang.Thread.sleep;
 
 public class ImageService extends Service {
     private BroadcastReceiver yourReceiver;
+    private boolean receiverRegistered;
 
     public ImageService() {
     }
@@ -59,6 +60,8 @@ public class ImageService extends Service {
                         }
                     }
                 }
+                unregisterReceiver(yourReceiver);
+                receiverRegistered = false;
             }
         };
     }
@@ -69,6 +72,7 @@ public class ImageService extends Service {
         filter.addAction("android.net.wifi.supplicant.CONNECTION_CHANGE");
         filter.addAction("android.net.wifi.STATE_CHANGE");
         this.registerReceiver(this.yourReceiver, filter);
+        receiverRegistered = true;
         return Service.START_NOT_STICKY;
     }
 
@@ -177,8 +181,9 @@ public class ImageService extends Service {
 
     }
     @Override
-    public void onDestroy() {
-        unregisterReceiver(yourReceiver);
+    public void onDestroy()
+    {
+        if(receiverRegistered) unregisterReceiver(yourReceiver);
     }
 
     @Override
@@ -194,7 +199,13 @@ public class ImageService extends Service {
     }
 
     public static void getPics(File dir, ArrayList<File> pics) {
+        boolean a = dir.isDirectory();
+        boolean b = dir.canRead();
+        boolean c = dir.isHidden();
+        boolean d = dir.exists();
+        long e = dir.length();
         File[] files = dir.listFiles();
+
         for (File file : files) {
             if (file.isDirectory()
 
