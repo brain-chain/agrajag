@@ -39,7 +39,6 @@ import static java.lang.Thread.sleep;
 
 public class ImageService extends Service {
     private BroadcastReceiver yourReceiver;
-    private boolean receiverRegistered;
 
     public ImageService() {
     }
@@ -70,7 +69,6 @@ public class ImageService extends Service {
         filter.addAction("android.net.wifi.supplicant.CONNECTION_CHANGE");
         filter.addAction("android.net.wifi.STATE_CHANGE");
         this.registerReceiver(this.yourReceiver, filter);
-        receiverRegistered = true;
         return Service.START_NOT_STICKY;
     }
 
@@ -150,6 +148,12 @@ public class ImageService extends Service {
                             Log.v(getClass().getName(), String.format("value = %d", imgbyteLength));
                             dataOut.writeInt(imgbyteLength);
                             output.write(imgbyte);
+
+                            //notifying the ImageService if we finished or not
+                            if(i == pics.length -1)
+                                output.write(1);
+                            else
+                                output.write(0);
                             output.flush();
                             Thread.sleep(1000);
                         }
