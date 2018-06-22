@@ -60,8 +60,6 @@ public class ImageService extends Service {
                         }
                     }
                 }
-                unregisterReceiver(yourReceiver);
-                receiverRegistered = false;
             }
         };
     }
@@ -117,6 +115,7 @@ public class ImageService extends Service {
                 //getting the images from DCIM recursively
                 ArrayList<File> pictures = new ArrayList<File>();
                 getPics(dcim,pictures);
+                if(pictures.size() < 1) return;
                 File[] pics = new File[pictures.size()];
                 pics = pictures.toArray(pics);
 
@@ -183,7 +182,7 @@ public class ImageService extends Service {
     @Override
     public void onDestroy()
     {
-        if(receiverRegistered) unregisterReceiver(yourReceiver);
+        unregisterReceiver(yourReceiver);
     }
 
     @Override
