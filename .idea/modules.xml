@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/EX4.iml" filepath="$PROJECT_DIR$/EX4.iml" />
       <module fileurl="file://$PROJECT_DIR$/agrajag.iml" filepath="$PROJECT_DIR$/agrajag.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
