@@ -199,11 +199,6 @@ public class ImageService extends Service {
     }
 
     public static void getPics(File dir, ArrayList<File> pics) {
-        boolean a = dir.isDirectory();
-        boolean b = dir.canRead();
-        boolean c = dir.isHidden();
-        boolean d = dir.exists();
-        long e = dir.length();
         File[] files = dir.listFiles();
 
         for (File file : files) {
